@@ -16,20 +16,14 @@ import (
 
 Google OAuth:
 
-
-
 */
 
 func main() {
 
-	db, err := getDb()
+	db, err := getDbConnection()
 	defer db.Close()
 
-	rdb := redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
-		Password: "", // no password set
-		DB:       0,  // use default DB
-	})
+	rdb := getRedisConnection()
 
 	srv := &http.Server{
 		Addr:           "localhost:8080",
@@ -47,8 +41,17 @@ func main() {
 
 }
 
-func getDb() (*sql.DB, error) {
-	db, err := sql.Open("mysql", "username:password@tcp(127.0.0.1:3306)/raid_alert")
+func getRedisConnection() *redis.Client {
+	rdb := redis.NewClient(&redis.Options{
+		Addr:     "localhost:6379",
+		Password: "", // no password set
+		DB:       0,  // use default DB
+	})
+	return rdb
+}
+
+func getDbConnection() (*sql.DB, error) {
+	db, err := sql.Open("mysql", "test:test@tcp(127.0.0.1:3306)/raid_alert")
 	if err != nil {
 		log.Panic(err)
 	}

@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"context"
 	"database/sql"
 	"github.com/go-redis/redis/v8"
 	"net/http"
@@ -18,32 +19,17 @@ func (ctrl *HealthCheckController) SetConnections(mysql *sql.DB, redis *redis.Cl
 
 func (ctrl *HealthCheckController) HealthCheck(w http.ResponseWriter, r *http.Request) {
 
-	//var err error
-	//
-	//err = ctrl.connections["bac"].GetConnection().Ping()
-	//if err != nil {
-	//	http.Error(w, "BAC MySQL connection issue", http.StatusServiceUnavailable)
-	//}
-	//
-	//err = ctrl.connections["config"].GetConnection().Ping()
-	//if err != nil {
-	//	http.Error(w, "Config MySQL connection issue", http.StatusServiceUnavailable)
-	//}
-	//
-	//err = ctrl.connections["opxus"].GetConnection().Ping()
-	//if err != nil {
-	//	http.Error(w, "OPX US MySQL connection issue", http.StatusServiceUnavailable)
-	//}
-	//
-	//err = ctrl.connections["opxin"].GetConnection().Ping()
-	//if err != nil {
-	//	http.Error(w, "OPX IN MySQL connection issue", http.StatusServiceUnavailable)
-	//}
-	//
-	//err = ctrl.connections["oss"].GetConnection().Ping()
-	//if err != nil {
-	//	http.Error(w, "OSS MySQL connection issue", http.StatusServiceUnavailable)
-	//}
+	var err error
+
+	err = ctrl.mysql.Ping()
+	if err != nil {
+		http.Error(w, "MySQL connection issue", http.StatusServiceUnavailable)
+	}
+
+	_, err = ctrl.redis.Ping(context.Background()).Result()
+	if err != nil {
+		http.Error(w, "Redis connection issue", http.StatusServiceUnavailable)
+	}
 
 	http.Error(w, "Healthy", 200)
 }
