@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"database/sql"
-	"encoding/json"
 	"github.com/go-redis/redis/v8"
 	_ "github.com/go-sql-driver/mysql"
 	"net/http"
@@ -26,9 +25,9 @@ func (ctrl *CityController) GetAll(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		switch err {
 		case sql.ErrNoRows:
-			respondWithError(w, http.StatusNotFound, "Not found")
+			Response{}.withError(w, http.StatusNotFound, "Not found")
 		default:
-			respondWithError(w, http.StatusInternalServerError, err.Error())
+			Response{}.withError(w, http.StatusInternalServerError, err.Error())
 		}
 		return
 	}
@@ -38,17 +37,5 @@ func (ctrl *CityController) GetAll(w http.ResponseWriter, r *http.Request) {
 		citiesDTO = append(citiesDTO, dto.NewCityDTO(cities[city]))
 	}
 
-	respondWithJSON(w, http.StatusOK, citiesDTO)
-}
-
-func respondWithError(w http.ResponseWriter, code int, message string) {
-	respondWithJSON(w, code, map[string]string{"error": message})
-}
-
-func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
-	response, _ := json.Marshal(payload)
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(code)
-	w.Write(response)
+	Response{}.withJSON(w, http.StatusOK, citiesDTO)
 }

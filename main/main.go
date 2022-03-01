@@ -73,19 +73,22 @@ func router(mysql *sql.DB, redis *redis.Client) http.Handler {
 	cityController := controllers.CityController{}
 	cityController.SetConnections(mysql, redis)
 
+	statusController := controllers.StatusController{}
+	statusController.SetConnections(mysql, redis)
+
 	//	APIs:
 	//		/city  GET - get all cities
 	//		/city/status GET - get all cities' status
 	//		/city/status/{id} GET - get city status
-	//		/city/status/{id} POST - submit status (yes|no) - cancel option for yes
+	//		/city/status/{id} POST - submit status (yes|no) - cancel option
 
 	r.HandleFunc("/healthcheck", healthCheckController.HealthCheck).Methods("GET")
 
 	r.HandleFunc("/city", cityController.GetAll).Methods("GET")
 
-	r.HandleFunc("/city/status", cityController.GetAll).Methods("GET")
-	r.HandleFunc("/city/status/{cityId}", cityController.GetAll).Methods("GET")
-	r.HandleFunc("/city/status/{cityId}", cityController.GetAll).Methods("POST")
+	r.HandleFunc("/city/status", statusController.GetAllStatuses).Methods("GET")
+	r.HandleFunc("/city/status/{cityId}", statusController.GetStatus).Methods("GET")
+	r.HandleFunc("/city/status/{cityId}", statusController.SetStatus).Methods("POST")
 
 	return r
 

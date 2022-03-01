@@ -18,9 +18,21 @@ func (ctrl *StatusController) SetConnections(mysql *sql.DB, redis *redis.Client)
 }
 
 func (ctrl *StatusController) GetAllStatus(w http.ResponseWriter, r *http.Request) {
+	Response{}.withError(w, http.StatusNotImplemented, "Not implemented")
 
 }
 
 func (ctrl *StatusController) GetStatus(w http.ResponseWriter, r *http.Request) {
+	Response{}.withError(w, http.StatusNotImplemented, "Not implemented")
+
+}
+
+func (ctrl *StatusController) SetStatus(w http.ResponseWriter, r *http.Request) {
+	Response{}.withError(w, http.StatusNotImplemented, "Not implemented")
+
+}
+
+func (ctrl *StatusController) GetAllStatuses(w http.ResponseWriter, r *http.Request) {
+	Response{}.withError(w, http.StatusNotImplemented, "Not implemented")
 
 }
