@@ -39,3 +39,7 @@ func (ctrl *CityController) GetAll(w http.ResponseWriter, r *http.Request) {
 
 	Response{}.withJSON(w, http.StatusOK, citiesDTO)
 }
+
+func (ctrl *CityController) GetOne(w http.ResponseWriter, r *http.Request) {
+	Response{}.withError(w, http.StatusNotImplemented, "Not implemented")
+}
